@@ -164,9 +164,8 @@ class Application_Env(Env):
         #useful for visualization 
         pass
 
-    def reset(self, utility):
+    def reset(self):
         #set initial state and the utility
-        self.utility = utility
         return self.utility
 
     def reset_seen_actions(self):
@@ -181,10 +180,6 @@ episodes=30
 states = my_env.observation_space.shape
 
 actions = my_env.action_space.n
-
-
-
-
 
 
 
