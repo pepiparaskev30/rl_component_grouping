@@ -11,9 +11,8 @@ from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten
 from tensorflow.keras.optimizers import Adam
-from rl.agents.dqn import DQNAgent
+from rl.agents import DQNAgent
 from rl.policy import BoltzmannQPolicy, EpsGreedyQPolicy
-from rl.memory import SequentialMemory
 from tensorflow.python.util import memory
 warnings.filterwarnings("ignore")
 
@@ -194,6 +193,7 @@ dqn.compile(Adam(learning_rate=1e-3), metrics=['mae'])
 dqn.fit(my_env, nb_steps=5000, visualize=False, verbose=1)
 
 
+# ppppppppppp
 '''
 for episode in range(episodes+1):
     initial_utility = my_env.reset(utility)
