@@ -15,6 +15,7 @@ from rl.agents import DQNAgent
 from rl.policy import BoltzmannQPolicy, EpsGreedyQPolicy
 from tensorflow.python.util import memory
 warnings.filterwarnings("ignore")
+from rl.memory import SequentialMemory
 
 
 a = [[[1, 2, 3]], [[1], [2, 3]], [[3], [1, 2]], [[1], [2], [3]]]
@@ -76,13 +77,12 @@ def build_model(states, actions):
 
 
 
-def build_agents(model):
-    policy= BoltzmannQPolicy()
-    memory =SequentialMemory(limit=5000, window_length=1)
-    dqa = DQNAgent(model=model, memory=memory, policy=policy, 
-            nb_actions = actions, nb_steps_warmup = 10, target = 1e-2)
-
-    return dqa
+def build_agent(model, actions):
+    policy = BoltzmannQPolicy()
+    memory = SequentialMemory(limit=50000, window_length=1)
+    dqn = DQNAgent(model=model, memory=memory, policy=policy, 
+                  nb_actions=actions, nb_steps_warmup=10, target_model_update=1e-2)
+    return dqn
 
 int_act = initial_state(a)
 num_of_actions = 2
@@ -188,9 +188,10 @@ actions = my_env.action_space.n
 model = build_model(states=states, actions=actions)
 model.summary()
 
-dqn = build_agents(model=model, actions=actions)
-dqn.compile(Adam(learning_rate=1e-3), metrics=['mae'])
-dqn.fit(my_env, nb_steps=5000, visualize=False, verbose=1)
+
+dqn = build_agent(model, actions)
+dqn.compile(Adam(lr=1e-3), metrics=['mae'])
+dqn.fit(my_env, nb_steps=50000, visualize=False, verbose=1)
 
 
 # ppppppppppp
