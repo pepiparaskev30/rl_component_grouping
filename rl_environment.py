@@ -11,6 +11,7 @@ warnings.filterwarnings("ignore")
 import requests
 import time
 
+
 action_namelist=[]
 action_value_list=[]
 
@@ -147,7 +148,7 @@ class Application_Env(Env):
         self.seen_actions = [self.initial_property]
 
 
-    def step(self, action, counter_): 
+    def step(self, action): 
         print("Agent tests the {} action".format(action))
         properties = action
         self.utility = trigger_utility()
@@ -192,15 +193,14 @@ class Application_Env(Env):
         info={}
 
 
-        return self.utility, reward, done, info, counter_, self.seen_actions
+        return self.utility, reward, done, info
 
     def render(self):
         #useful for visualization 
         pass
 
-    def reset(self, utility):
+    def reset(self):
         #set initial state and the utility
-        self.utility = utility
         return self.utility
 
     def reset_seen_actions(self):
@@ -226,17 +226,17 @@ if __name__ == "__main__":
 episodes=30
 
 for episode in range(episodes+1):
-    initial_utility = my_env.reset(utility)
+    initial_utility = my_env.reset()
     done =False
     score=0
-    counter_=0
+    #counter_=0
     c_ = 0
     seen_actions = my_env.reset_seen_actions()
     #print("seen actions {}".format(seen_actions))
     lr = random.sample(my_env.list_with_all_possible_actions, len(my_env.list_with_all_possible_actions))
     while not done and c_ <len(my_env.list_with_all_possible_actions):
         action=lr[c_]
-        utility, reward, done, info, counter_, seen_actions = my_env.step(action, counter_)
+        utility, reward, done, info = my_env.step(action)
         print(reward)
         print(utility)
         #time.sleep(2)
@@ -246,7 +246,7 @@ for episode in range(episodes+1):
         print("***********************")
     
     print("episode: {}, score: {}".format(episode, score))
-    print(seen_actions)
+    #print(seen_actions)
     print("------------")
     
 
