@@ -185,17 +185,9 @@ actions = my_env.action_space.n
 
 
 
-model = build_model(states=states, actions=actions)
-model.summary()
 
 
-dqn = build_agent(model, actions)
-dqn.compile(Adam(lr=1e-3), metrics=['mae'])
-dqn.fit(my_env, nb_steps=50000, visualize=False, verbose=1)
 
-
-# ppppppppppp
-'''
 for episode in range(episodes+1):
     initial_utility = my_env.reset(utility)
     done =False
@@ -218,13 +210,19 @@ for episode in range(episodes+1):
     print("------------")
     print("episode: {}, score: {}".format(episode, score))
     print(seen_actions)
-'''
 
-'''
+model = build_model(states=states, actions=actions)
+model.summary()
+
+
+dqn = build_agent(model, actions)
+dqn.compile(Adam(lr=1e-3), metrics=['mae'])
+dqn.fit(my_env, nb_steps=50000, visualize=False, verbose=1)
+
 
 #my_env=Application_Env(action_dictionary,int_act,first_response)
 #print(my_env.all_state)
-
+'''
 
 my_env = Application_Env(action_value_list=action_value_list,int_act=int_act, first_response=first_response)
 
