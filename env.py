@@ -184,7 +184,7 @@ actions = my_env.action_space.n
 
 
 for episode in range(episodes+1):
-    initial_utility = my_env.reset(utility)
+    initial_utility = my_env.reset()
     done =False
     score=0
     counter_=0
