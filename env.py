@@ -161,7 +161,7 @@ def build_model(states, actions):
 
 def build_agent(model, actions):
     policy = BoltzmannQPolicy()
-    memory = SequentialMemory(limit=1000, window_length=1)
+    memory = SequentialMemory(limit=10000, window_length=1)
     dqn = DQNAgent(model=model, memory=memory, policy=policy, 
                   nb_actions=actions, nb_steps_warmup=10, target_model_update=1e-2)
     return dqn
