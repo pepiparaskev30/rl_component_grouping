@@ -151,7 +151,7 @@ class Application_Env(Env):
     def reset_seen_actions(self):
         self.seen_actions = [self.initial_property]
         return self.seen_actions
-'''
+
 def build_model(states, actions):
     model = Sequential()
     model.add(Dense(units=24, activation="relu", input_shape=states))
@@ -165,7 +165,7 @@ def build_agent(model, actions):
     dqn = DQNAgent(model=model, memory=memory, policy=policy, 
                   nb_actions=actions, nb_steps_warmup=10, target_model_update=1e-2)
     return dqn
-'''
+
 
 if __name__ == "__main__":
 
@@ -218,6 +218,8 @@ if __name__ == "__main__":
     dqn.compile(Adam(lr=1e-3), metrics=['mae'])
     dqn.fit(my_env, nb_steps=50000, visualize=False, verbose=1)
 
+    scores = dqn.test(my_env, nb_episodes=100, visualize=False)
+    print(np.mean(scores.history['episode_reward']))
 
 
 #my_env=Application_Env(action_dictionary,int_act,first_response)
