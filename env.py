@@ -216,7 +216,7 @@ if __name__ == "__main__":
 
     dqn = build_agent(model, actions)
     dqn.compile(Adam(lr=1e-3), metrics=['mae'])
-    dqn.fit(my_env, nb_steps=1000, visualize=False, verbose=1)
+    dqn.fit(my_env, nb_steps=100, visualize=False, verbose=1)
 
     '''
     scores = dqn.test(my_env, nb_episodes=100, visualize=False)
