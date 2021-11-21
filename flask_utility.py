@@ -15,4 +15,4 @@ def utility_value():
 
 
 if __name__ == "__main__":        # on running python app.py
-    app.run(port=5002)  
+    app.run(port=5003)  
