@@ -218,9 +218,10 @@ if __name__ == "__main__":
     dqn.compile(Adam(lr=1e-3), metrics=['mae'])
     dqn.fit(my_env, nb_steps=500, visualize=False, verbose=1)
 
+    '''
     scores = dqn.test(my_env, nb_episodes=100, visualize=False)
     print(np.mean(scores.history['episode_reward']))
-
+    '''
 
 #my_env=Application_Env(action_dictionary,int_act,first_response)
 #print(my_env.all_state)
