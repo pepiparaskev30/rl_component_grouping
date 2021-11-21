@@ -181,7 +181,7 @@ if __name__ == "__main__":
     #print(my_env.action_space.n)
     
 
-    episodes=30
+    episodes=10
     for episode in range(episodes+1):
             initial_utility = my_env.reset()
             done =False
