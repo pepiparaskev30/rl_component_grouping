@@ -45,7 +45,7 @@ def initial_state(actions_):
 
 def trigger_utility():
     #triggers the utility function to calculate the value 
-    url= 'http://127.0.0.1:5001/utility'
+    url= 'http://127.0.0.1:5003/utility'
     response = requests.get(url, timeout=2.50)
 
     return(float(response.text))
@@ -66,19 +66,19 @@ def cost_calculation(action,actions_keys:list,action_value_list:list,seen_action
 
     #print("The agent chooses the action {} which is translated in: {}".format(action, translated_action))
     if len(translated_action) < len(seen_actions[-1]):
-        #print("Agent must destroy a vm")
+        print("Agent must destroy a vm")
         destroy = 10
         create = 0
         seen_actions.append(translated_action)
         seen_actions_keys.append(action)
     elif len(translated_action) == len(seen_actions[-1]):
-        #print('Agent has nothing to do')
+        print('Agent has nothing to do')
         destroy = 0
         create=0
         seen_actions.append(translated_action)
         seen_actions_keys.append(action)
     else:
-        #print("Agent must create a vm")
+        print("Agent must create a vm")
         destroy =0
         create=-10
         seen_actions.append(translated_action)
@@ -103,11 +103,11 @@ class Application_Env(Env):
         self.seen_action_keys = [0]
 
     def step(self, action): 
-        #print("Agent tests the {} action".format(action))
+        print("Agent tests the {} action".format(action))
 
         self.utility = trigger_utility()
         
-        #print("The agent selects to group components as {} and the utility function is: {}".format(action, self.utility))
+        print("The agent selects to group components as {} and the utility function is: {}".format(action, self.utility))
         
         destroy, create, self.seen_actions, self.seen_actions_keys = cost_calculation(action,self.actions_keys, self.list_with_all_possible_actions, self.seen_actions, self.seen_action_keys)
         
@@ -151,7 +151,7 @@ class Application_Env(Env):
     def reset_seen_actions(self):
         self.seen_actions = [self.initial_property]
         return self.seen_actions
-
+'''
 def build_model(states, actions):
     model = Sequential()
     model.add(Dense(units=24, activation="relu", input_shape=states))
@@ -165,7 +165,7 @@ def build_agent(model, actions):
     dqn = DQNAgent(model=model, memory=memory, policy=policy, 
                   nb_actions=actions, nb_steps_warmup=10, target_model_update=1e-2)
     return dqn
-
+'''
 
 if __name__ == "__main__":
 
@@ -177,6 +177,10 @@ if __name__ == "__main__":
     actions_keys = create_index_(action_value_list)
     my_env = Application_Env(action_value_list=action_value_list,utility=utility, 
                                     action_dictionary=action_dictionary, actions_keys=actions_keys)
+    
+    #print(my_env.action_space.n)
+    
+
     episodes=30
     for episode in range(episodes+1):
             initial_utility = my_env.reset()
@@ -213,6 +217,7 @@ if __name__ == "__main__":
     dqn = build_agent(model, actions)
     dqn.compile(Adam(lr=1e-3), metrics=['mae'])
     dqn.fit(my_env, nb_steps=50000, visualize=False, verbose=1)
+
 
 
 #my_env=Application_Env(action_dictionary,int_act,first_response)
