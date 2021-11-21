@@ -10,11 +10,12 @@ import numpy as np
 from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten
-#from rl.agents import DQNAgent
-#from rl.policy import BoltzmannQPolicy, EpsGreedyQPolicy
-#from tensorflow.python.util import memory
+from tensorflow.keras.optimizers import Adam
+from rl.agents import DQNAgent
+from rl.policy import BoltzmannQPolicy, EpsGreedyQPolicy
+from tensorflow.python.util import memory
 warnings.filterwarnings("ignore")
-#from rl.memory import SequentialMemory
+from rl.memory import SequentialMemory
 
 
 a = [[[1, 2, 3]], [[1], [2, 3]], [[3], [1, 2]], [[1], [2], [3]]]
