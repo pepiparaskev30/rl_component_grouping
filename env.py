@@ -64,7 +64,7 @@ def cost_calculation(action,actions_keys:list,action_value_list:list,seen_action
     idx_action_ = actions_keys.index(action)
     translated_action = action_value_list[idx_action_]
 
-    #print("The agent chooses the action {} which is translated in: {}".format(action, translated_action))
+    print("The agent chooses the action {} which is translated in: {}".format(action, translated_action))
     if len(translated_action) < len(seen_actions[-1]):
         print("Agent must destroy a vm")
         destroy = 10
@@ -107,7 +107,7 @@ class Application_Env(Env):
 
         self.utility = trigger_utility()
         
-        print("The agent selects to group components as {} and the utility function is: {}".format(action, self.utility))
+        #print("The agent selects to group components as {} and the utility function is: {}".format(action, self.utility))
         
         destroy, create, self.seen_actions, self.seen_actions_keys = cost_calculation(action,self.actions_keys, self.list_with_all_possible_actions, self.seen_actions, self.seen_action_keys)
         
