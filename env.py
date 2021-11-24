@@ -166,7 +166,7 @@ class Application_Env(Env):
             #set a placeholoder for info
 
         info={}
-        #print("reward is: {}".format(reward))
+        print("reward is: {}".format(reward))
         #print("************************")
         return self.utility, reward, done, info
 
