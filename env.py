@@ -117,7 +117,7 @@ class Application_Env(Env):
         self.utility = trigger_utility()
         self.list_of_utilities.append(self.utility)
         print(self.utility)
-        print(self.seen_action_keys)
+        #print(self.seen_action_keys)
 
         if len(self.seen_action_keys) != len(set(self.seen_action_keys)):
             
@@ -167,6 +167,7 @@ class Application_Env(Env):
 
         info={}
         print("reward is: {}".format(reward))
+        print(self.seen_action_keys)
         print("************************")
         return self.utility, reward, done, info
 
