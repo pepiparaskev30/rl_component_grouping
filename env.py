@@ -175,47 +175,47 @@ def build_agent(model, actions):
                   nb_actions=actions, nb_steps_warmup=10, target_model_update=1e-2)
     return dqn
 
-if __name__ == "__main__":
 
-    int_act = initial_state(a)
-    num_of_actions = 2
-    action_namelist, action_value_list, action_dictionary = create_the_action_plan(a)
-    utility = trigger_utility() #is the utility for every running component in seperate vms
-    actions_keys = create_index_(action_value_list)
-    my_env = Application_Env(action_value_list=action_value_list,utility=utility, 
+
+int_act = initial_state(a)
+num_of_actions = 2
+action_namelist, action_value_list, action_dictionary = create_the_action_plan(a)
+utility = trigger_utility() #is the utility for every running component in seperate vms
+actions_keys = create_index_(action_value_list)
+my_env = Application_Env(action_value_list=action_value_list,utility=utility, 
                                     action_dictionary=action_dictionary, actions_keys=actions_keys)
 
-    episodes=2
-    for episode in range(episodes+1):
-            initial_utility = my_env.reset()
-            done =False
-            score=0
+episodes=2
+for episode in range(episodes+1):
+        initial_utility = my_env.reset()
+        done =False
+        score=0
 
-            while not done:
-                action = my_env.action_space.sample()
-                utility, reward, done, info = my_env.step(action)
-                score+=reward
-                time.sleep(2)
+        while not done:
+            action = my_env.action_space.sample()
+            utility, reward, done, info = my_env.step(action)
+            score+=reward
+            #time.sleep(2)
 
             print("------------")
             print("episode: {}, score: {}".format(episode, score))
 
-    actions = my_env.action_space.n
-    states = my_env.observation_space.shape
-    print(states)
+actions = my_env.action_space.n
+states = my_env.observation_space.shape
+print(states)
     
 
-    model = build_model(states=states, actions=actions)
-    model.summary()
+model = build_model(states=states, actions=actions)
+model.summary()
 
 
-    dqn = build_agent(model, actions)
-    dqn.compile(Adam(lr=1e-3), metrics=['mae'])
+dqn = build_agent(model, actions)
+dqn.compile(Adam(lr=1e-3), metrics=['mae'])
 
-    print("Training in the environment.......")
+print("Training in the environment.......")
 
-    dqn.fit(my_env, nb_steps=100, visualize=False, verbose=1)
+dqn.fit(my_env, nb_steps=100, visualize=False, verbose=1)
 
-    scores = dqn.test(my_env, nb_episodes=100, visualize=False)
-    print(np.mean(scores.history['episode_reward']))
+scores = dqn.test(my_env, nb_episodes=100, visualize=False)
+print(np.mean(scores.history['episode_reward']))
 
