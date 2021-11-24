@@ -163,7 +163,6 @@ class Application_Env(Env):
 
 def build_model(states, actions):
     model = Sequential()
-    model.add(Flatten(input_shape=(1,states)))
     model.add(Dense(units=24, activation="relu", input_shape=states))
     model.add(Dense(units=24, activation="relu"))
     model.add(Dense(units=actions, activation="linear"))
@@ -186,7 +185,7 @@ if __name__ == "__main__":
     my_env = Application_Env(action_value_list=action_value_list,utility=utility, 
                                     action_dictionary=action_dictionary, actions_keys=actions_keys)
 
-    episodes=10
+    episodes=5
     for episode in range(episodes+1):
             initial_utility = my_env.reset()
             done =False
