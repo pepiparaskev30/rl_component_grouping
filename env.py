@@ -18,6 +18,7 @@ warnings.filterwarnings("ignore")
 from rl.memory import SequentialMemory
 
 
+
 a = [[[1, 2, 3]], [[1], [2, 3]], [[3], [1, 2]], [[1], [2], [3]]]
 
 action_namelist=[]
@@ -162,6 +163,7 @@ class Application_Env(Env):
 
 def build_model(states, actions):
     model = Sequential()
+    model.add(Flatten(input_shape=(1,states)))
     model.add(Dense(units=24, activation="relu", input_shape=states))
     model.add(Dense(units=24, activation="relu"))
     model.add(Dense(units=actions, activation="linear"))
