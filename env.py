@@ -112,7 +112,7 @@ class Application_Env(Env):
         self.seen_action_keys.append(action)
         translated_action  = self.list_with_all_possible_actions[action]
         self.seen_actions.append(translated_action)
-        print("the agent chooses the action {}".format(translated_action))
+        print("the agent chooses the action {}".format(action))
         print("seen actions : {}".format(self.seen_actions))
         self.utility = trigger_utility()
         self.list_of_utilities.append(self.utility)
