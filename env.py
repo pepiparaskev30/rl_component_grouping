@@ -30,7 +30,6 @@ def create_the_action_plan(a):
         action_value_list.append(element)
     zip_iterator = zip(action_namelist, action_value_list) 
     action_dictionary = dict(zip_iterator)
-    
     return action_namelist, action_value_list, action_dictionary
 
 
@@ -38,9 +37,7 @@ def initial_state(actions_):
     len_actions=[]
     for action in actions_:
         len_actions.append(len(action))
-
     idx_initial_action = max(len_actions)
-
     return actions_[idx_initial_action]
 
 def trigger_utility():
@@ -59,33 +56,24 @@ def create_index_(action_value_list:list):
 
     return actions_keys
 
-def cost_calculation(action,actions_keys:list,action_value_list:list,seen_actions:list, seen_actions_keys:list):
-
-    idx_action_ = actions_keys.index(action)
-    translated_action = action_value_list[idx_action_]
-
-    print("The agent chooses the action {} which is translated in: {}".format(action, translated_action))
-    if len(translated_action) < len(seen_actions[-1]):
+def cost_calculation(reward, seen_actions):
+    if len(seen_actions[-1]) < len(seen_actions[-2]):
         print("Agent must destroy a vm")
         destroy = 10
         create = 0
-        seen_actions.append(translated_action)
-        seen_actions_keys.append(action)
-    elif len(translated_action) == len(seen_actions[-1]):
+        reward = reward+destroy+create 
+    elif len(seen_actions[-1]) == len(seen_actions[-2]):
         print('Agent has nothing to do')
         destroy = 0
         create=0
-        seen_actions.append(translated_action)
-        seen_actions_keys.append(action)
+        reward = reward+destroy+create 
     else:
         print("Agent must create a vm")
         destroy =0
         create=-10
-        seen_actions.append(translated_action)
-        seen_actions_keys.append(action)
-    
-    return destroy, create, seen_actions, seen_actions_keys
+        reward = reward+destroy+create 
 
+    return reward
 
 class Application_Env(Env):
     
@@ -100,57 +88,77 @@ class Application_Env(Env):
         self.seen_actions = [self.initial_property]
         self.action_dict = action_dictionary
         self.actions_keys= actions_keys
-        self.seen_action_keys = [0]
+        self.seen_action_keys = []
+    
+    def step(self, action):
 
-    def step(self, action): 
-        print("Agent tests the {} action".format(action))
-
+        self.seen_action_keys.append(action)
+        translated_action  = self.list_with_all_possible_actions[action]
+        self.seen_actions.append(translated_action)
+        print("the agent chooses the action {}".format(translated_action))
+        print("seen actions : {}".format(self.seen_actions))
         self.utility = trigger_utility()
-        
-        #print("The agent selects to group components as {} and the utility function is: {}".format(action, self.utility))
-        
-        destroy, create, self.seen_actions, self.seen_actions_keys = cost_calculation(action,self.actions_keys, self.list_with_all_possible_actions, self.seen_actions, self.seen_action_keys)
-        
-        if self.utility>0.8 and self.utility> self.list_of_utilities[-1]:
-            reward=100+destroy+create
-            self.list_of_utilities.append(self.utility)
-            counter=1
+        self.list_of_utilities.append(self.utility)
+        print(self.utility)
+        print(self.seen_action_keys)
 
-        elif self.utility>0.6 and self.utility> self.list_of_utilities[-1]:
-            reward=1+destroy+create
-            self.list_of_utilities.append(self.utility)
-            counter = 0
-
-        elif self.utility>0.6 and self.utility<= self.list_of_utilities[-1]:
-            reward = 0+destroy+create
-            self.list_of_utilities.append(self.utility)
-            counter = 0
-
-        elif self.utility<0.6:
-            reward=-1+destroy+create
-            self.list_of_utilities.append(self.utility)
-            counter = 0
-
-        if counter != 1:
-            done=False
+        if len(self.seen_action_keys) != len(set(self.seen_action_keys)):
+            
+            counter=0
+            reward =0
+            self.seen_action_keys = self.actions_keys[:-1]
+            self.seen_actions = self.seen_actions[:-1]
+            
         else:
-            done=True
-            #set a placeholoder for info
-        info={}
 
+            if self.list_of_utilities[-1] >=0.8 and self.list_of_utilities[-1]>self.list_of_utilities[-2]:
+                reward_ =100
+                reward = cost_calculation(reward_, self.seen_actions)         
+
+            elif self.list_of_utilities[-1]>0.6 and self.list_of_utilities[-1]>self.list_of_utilities[-2]:
+                reward_=5
+                reward = cost_calculation(reward_, self.seen_actions) 
+            
+            elif self.list_of_utilities[-1]>0.6 and self.list_of_utilities[-1] < self.list_of_utilities[-2]: 
+                reward_=1
+                reward = cost_calculation(reward_, self.seen_actions) 
+
+            elif self.list_of_utilities[-1]<0.6:
+                reward_=-1
+                reward = cost_calculation(reward_, self.seen_actions) 
+
+            
+            counter = 1 if (self.list_of_utilities[-1] >=0.8 and self.list_of_utilities[-2]<self.list_of_utilities[-1]) else 0
+
+
+        if counter != 1 and not len(self.seen_actions) == len(self.all_state):
+            #print("is not done")
+            done=False
+
+        elif counter !=1 and len(self.seen_actions) == len(self.all_state):
+            #print("is done")
+            done=True
+            self.seen_actions= [self.initial_property]
+            self.seen_action_keys=[]
+
+        elif counter ==1:
+            print("is done")
+            done=True
+            self.seen_actions= [self.initial_property]
+            self.seen_action_keys=[]
+            #set a placeholoder for info
+
+        info={}
+        print("reward is: {}".format(reward))
+        print("************************")
         return self.utility, reward, done, info
 
-    def render(self):
-        #useful for visualization 
-        pass
-
     def reset(self):
-        #set initial state and the utility
-        return self.utility
+        self.utility = trigger_utility()
 
-    def reset_seen_actions(self):
-        self.seen_actions = [self.initial_property]
-        return self.seen_actions
+
+        return self.utility, self.seen_actions, self.seen_action_keys
+
 
 def build_model(states, actions):
     model = Sequential()
@@ -166,9 +174,7 @@ def build_agent(model, actions):
                   nb_actions=actions, nb_steps_warmup=10, target_model_update=1e-2)
     return dqn
 
-
 if __name__ == "__main__":
-
 
     int_act = initial_state(a)
     num_of_actions = 2
@@ -177,34 +183,21 @@ if __name__ == "__main__":
     actions_keys = create_index_(action_value_list)
     my_env = Application_Env(action_value_list=action_value_list,utility=utility, 
                                     action_dictionary=action_dictionary, actions_keys=actions_keys)
-    
-    #print(my_env.action_space.n)
-    
 
     episodes=10
     for episode in range(episodes+1):
             initial_utility = my_env.reset()
             done =False
             score=0
-            counter_=0
-            c_ = 0
-            seen_actions = my_env.reset_seen_actions()
-            #print("seen actions {}".format(seen_actions))
-            lr = random.sample(my_env.actions_keys, len(my_env.actions_keys))
 
-            while not done and c_ <len(my_env.actions_keys):
-                action=lr[c_]
+            while not done:
+                action = my_env.action_space.sample()
                 utility, reward, done, info = my_env.step(action)
-                #print(reward)
-                #print(utility)
-                #time.sleep(2)
                 score+=reward
-                c_+=1
                 time.sleep(2)
-                #print("***********************")
-            #print("------------")
+
+            print("------------")
             print("episode: {}, score: {}".format(episode, score))
-            print(seen_actions)
 
     actions = my_env.action_space.n
     states = my_env.observation_space.shape
@@ -216,21 +209,11 @@ if __name__ == "__main__":
 
     dqn = build_agent(model, actions)
     dqn.compile(Adam(lr=1e-3), metrics=['mae'])
+
+    print("Training in the environment.......")
+
     dqn.fit(my_env, nb_steps=100, visualize=False, verbose=1)
 
-    '''
     scores = dqn.test(my_env, nb_episodes=100, visualize=False)
     print(np.mean(scores.history['episode_reward']))
-    '''
-
-#my_env=Application_Env(action_dictionary,int_act,first_response)
-#print(my_env.all_state)
-'''
-
-my_env = Application_Env(action_value_list=action_value_list,int_act=int_act, first_response=first_response)
-
-print(type(my_env.property_list))
-'''
-
-
 
