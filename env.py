@@ -185,7 +185,7 @@ if __name__ == "__main__":
     my_env = Application_Env(action_value_list=action_value_list,utility=utility, 
                                     action_dictionary=action_dictionary, actions_keys=actions_keys)
 
-    episodes=5
+    episodes=10
     for episode in range(episodes+1):
             initial_utility = my_env.reset()
             done =False
