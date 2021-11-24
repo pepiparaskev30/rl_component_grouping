@@ -59,17 +59,17 @@ def create_index_(action_value_list:list):
 
 def cost_calculation(reward, seen_actions):
     if len(seen_actions[-1]) < len(seen_actions[-2]):
-        print("Agent must destroy a vm")
+        #print("Agent must destroy a vm")
         destroy = 10
         create = 0
         reward = reward+destroy+create 
     elif len(seen_actions[-1]) == len(seen_actions[-2]):
-        print('Agent has nothing to do')
+        #print('Agent has nothing to do')
         destroy = 0
         create=0
         reward = reward+destroy+create 
     else:
-        print("Agent must create a vm")
+        #print("Agent must create a vm")
         destroy =0
         create=-10
         reward = reward+destroy+create 
@@ -113,7 +113,7 @@ class Application_Env(Env):
         translated_action  = self.list_with_all_possible_actions[action]
         self.seen_actions.append(translated_action)
         print("the agent chooses the action {}".format(action))
-        print("seen actions : {}".format(self.seen_actions))
+        #print("seen actions : {}".format(self.seen_actions))
         self.utility = trigger_utility()
         self.list_of_utilities.append(self.utility)
         print(self.utility)
@@ -159,15 +159,15 @@ class Application_Env(Env):
             self.seen_action_keys=[]
 
         elif counter ==1:
-            print("is done")
+            #print("is done")
             done=True
             self.seen_actions= [self.initial_property]
             self.seen_action_keys=[]
             #set a placeholoder for info
 
         info={}
-        print("reward is: {}".format(reward))
-        print("************************")
+        #print("reward is: {}".format(reward))
+        #print("************************")
         return self.utility, reward, done, info
 
     def reset(self):
@@ -198,7 +198,7 @@ for episode in range(episodes+1):
             score+=reward
             #time.sleep(2)
 
-            print("------------")
+            #print("------------")
             print("episode: {}, score: {}".format(episode, score))
 
 actions = my_env.action_space.n
