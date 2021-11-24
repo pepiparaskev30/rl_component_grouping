@@ -43,7 +43,7 @@ def initial_state(actions_):
 
 def trigger_utility():
     #triggers the utility function to calculate the value 
-    url= 'http://127.0.0.1:5003/utility'
+    url= 'http://127.0.0.1:5002/utility'
     response = requests.get(url, timeout=2.50)
 
     return(float(response.text))
