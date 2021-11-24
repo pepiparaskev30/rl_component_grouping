@@ -167,7 +167,7 @@ class Application_Env(Env):
 
         info={}
         print("reward is: {}".format(reward))
-        #print("************************")
+        print("************************")
         return self.utility, reward, done, info
 
     def reset(self):
