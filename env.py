@@ -174,7 +174,7 @@ class Application_Env(Env):
         self.utility = trigger_utility()
 
 
-        return self.utility, self.seen_actions, self.seen_action_keys
+        return self.utility
 
 
 
