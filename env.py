@@ -210,6 +210,6 @@ model.summary()
 
 dqn = build_agent(model, actions)
 dqn.compile(Adam(lr=1e-3), metrics=['mae'])
-dqn.fit(my_env, nb_steps=50000, visualize=False, verbose=1)
+dqn.fit(my_env, nb_steps=100, visualize=False, verbose=1)
 
 
