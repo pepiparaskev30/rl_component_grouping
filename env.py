@@ -156,10 +156,9 @@ def build_model(states, actions):
     model.add(Dense(actions, activation='linear'))
     return model
 
-
 def build_agent(model, actions):
     policy = BoltzmannQPolicy()
-    memory = SequentialMemory(limit=50000, window_length=1)
+    memory = SequentialMemory(limit=100, window_length=1)
     dqn = DQNAgent(model=model, memory=memory, policy=policy, 
                   nb_actions=actions, nb_steps_warmup=10, target_model_update=1e-2)
     return dqn
@@ -277,7 +276,7 @@ if __name__ == "__main__":
 
             dqn = build_agent(model, actions)
             dqn.compile(Adam(lr=1e-3), metrics=['mae'])
-            dqn.fit(my_env, nb_steps=5000, visualize=False, verbose=1)
+            dqn.fit(my_env, nb_steps=100, visualize=False, verbose=1)
 
             scores = dqn.test(my_env, nb_episodes=100, visualize=False)
             print(np.mean(scores.history['episode_reward']))
