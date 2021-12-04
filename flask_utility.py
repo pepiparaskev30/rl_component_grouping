@@ -11,8 +11,8 @@ app = Flask(__name__)
 @app.route('/utility', methods=['POST', 'GET'])
 
 def utility_value():
-    return str(random.uniform(0.1, 0.9))
+    return str(random.uniform(0.1, 0.99))
 
 
 if __name__ == "__main__":        # on running python app.py
-    app.run(port=5002)  
+    app.run(port=5003)  
