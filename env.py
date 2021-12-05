@@ -58,17 +58,17 @@ def create_index_(action_value_list:list):
 
 def cost_calculation(reward, seen_actions):
     if len(seen_actions[-1]) < len(seen_actions[-2]):
-        print("Agent must destroy vm/vms")
+        #print("Agent must destroy vm/vms")
         destroy = 10
         create = 0
         reward = reward+destroy+create 
     elif len(seen_actions[-1]) == len(seen_actions[-2]):
-        print('Agent has nothing to do')
+        #print('Agent has nothing to do')
         destroy = 0
         create=0
         reward = reward+destroy+create 
     else:
-        print("Agent must create  vm/vms")
+        #print("Agent must create  vm/vms")
         destroy =0
         create=-10
         reward = reward+destroy+create 
@@ -84,7 +84,7 @@ def create_map(combinations,action_dictionary:dict ):
         for i in range(1,11):
             list_of_actions.append(element)
             list_of_utilities.append(trigger_utility())
-            time.sleep(2)
+            time.sleep(1)
 
     for i in range(1,41):
         list_of_index.append(i)
@@ -185,7 +185,7 @@ class Application_Env(Env):
     def step(self, action):
         action, utility,idx_ = act(action,seen_action_keys=self.seen_action_keys,list_of_labeled_actions=self.action_labels,index_actions=self.indices,
                                  utility_list=self.all_state)
-        print(utility)
+        #print(utility)
 
         self.seen_action_keys.append(action)
         idx_seen_action = self.actions_keys.index(self.seen_action_keys[-1])
@@ -214,12 +214,11 @@ class Application_Env(Env):
             reward_=1
             reward = cost_calculation(reward_, self.seen_actions) 
 
-        elif self.list_of_utilities[-1]<0.6:
+        else:
 
             reward_=-1
             reward = cost_calculation(reward_, self.seen_actions) 
 
-        time.sleep(3)   
         counter = 1 if (self.list_of_utilities[-1] >=0.9) else 0
 
         if  counter ==1:
@@ -263,9 +262,7 @@ if __name__ == "__main__":
                 score+=reward
 
 
-            print("------------")
             print("episode: {}, score: {}".format(episode, score))
-            print("------------")
 
             actions = my_env.action_space.n
             states = my_env.observation_space.shape
